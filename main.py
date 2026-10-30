@@ -33,7 +33,9 @@ def load_api_definition(api_definition_path):
         if api_definition_path.startswith('http://') or api_definition_path.startswith('https://'):
             # Load from URL
             logging.info(f"Loading API definition from URL: {api_definition_path}")
-            response = requests.get(api_definition_path)
+            # Without a timeout a dead endpoint hangs the whole run
+            # forever; a definition file is small, so 10 seconds is ample.
+            response = requests.get(api_definition_path, timeout=10)
             response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
             api_definition = response.json()
         else:
@@ -65,14 +67,20 @@ def analyze_api(api_definition, auth_header=None, rate_limit_threshold=100):
 
     results = []
 
-    # Basic checks (can be expanded significantly)
+    # auth_header and rate_limit_threshold arrive from the CLI but a
+    # static definition cannot prove either one: nothing is sent to a
+    # live API, and a threshold only means something against observed
+    # traffic. They stay in the signature so callers do not break, and
+    # the checks below report only what the document itself shows.
+    # The two endpoint passes are kept separate on purpose: the report
+    # reads grouped by check, not interleaved endpoint by endpoint.
     if 'components' not in api_definition or 'securitySchemes' not in api_definition['components']:
         logging.warning("No security schemes defined. API might lack authentication.")
         results.append({'Check': 'Security Schemes', 'Result': 'No security schemes defined', 'Severity': 'High', 'Details': 'API might lack authentication.  Investigate each endpoint.'})
 
 
     # Check for rate limiting (very basic example - can be improved)
-    # This is a simplified check based on description keywords.  More robust checks would require dynamic testing.
+    # This is a simplified check based on description keywords.  Checking this properly would require dynamic testing.
     paths = api_definition.get('paths', {})
     for path, path_item in paths.items():
         for method, operation in path_item.items():
