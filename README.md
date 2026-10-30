@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # analyze-api-analyzer
 Examines API endpoints (e.g., Swagger/OpenAPI definitions or live endpoints) for common vulnerabilities like missing authentication, rate limiting issues, or insecure data handling. Uses `requests` and `json` for API interaction and definition parsing. - Focused on Data analysis and reporting
 
