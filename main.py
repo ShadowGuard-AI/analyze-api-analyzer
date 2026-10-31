@@ -15,14 +15,28 @@ def setup_argparse():
     parser = argparse.ArgumentParser(description='Analyze API endpoints for vulnerabilities.')
     parser.add_argument('api_definition', help='Path to OpenAPI/Swagger definition file (JSON) or URL to live API endpoint.')
     parser.add_argument('--output', '-o', help='Output file to save the analysis report (CSV).  Defaults to console output.', default=None)
-    parser.add_argument('--auth_header', help='Authorization header to use (e.g., "Bearer <token>")', default=None)
-    parser.add_argument('--rate_limit_threshold', type=int, default=100, help='Threshold for rate limiting analysis.  Defaults to 100 requests/minute.')
+    parser.add_argument('--auth_header', help='Header to send when fetching a definition from a URL: a full "Name: Value" header, or an Authorization value such as "Bearer <token>".', default=None)
     parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output (debug logging).')
 
     return parser.parse_args()
 
 
-def load_api_definition(api_definition_path):
+def build_auth_headers(auth_header):
+    """
+    Turns the --auth_header value into a headers dict for requests.
+    A "Name: Value" value is used as that header. Any other value is
+    sent as the Authorization header value, which matches the form
+    the help text has always shown ("Bearer <token>").
+    """
+    if not auth_header:
+        return None
+    name, sep, value = auth_header.partition(':')
+    if sep and name.strip() and ' ' not in name.strip() and value.strip():
+        return {name.strip(): value.strip()}
+    return {'Authorization': auth_header}
+
+
+def load_api_definition(api_definition_path, auth_header=None):
     """
     Loads the API definition from a file or URL.
     Handles both local files and remote URLs.
@@ -35,7 +49,7 @@ def load_api_definition(api_definition_path):
             logging.info(f"Loading API definition from URL: {api_definition_path}")
             # Without a timeout a dead endpoint hangs the whole run
             # forever; a definition file is small, so 10 seconds is ample.
-            response = requests.get(api_definition_path, timeout=10)
+            response = requests.get(api_definition_path, headers=build_auth_headers(auth_header), timeout=10)
             response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
             api_definition = response.json()
         else:
@@ -59,7 +73,7 @@ def load_api_definition(api_definition_path):
     return api_definition
 
 
-def analyze_api(api_definition, auth_header=None, rate_limit_threshold=100):
+def analyze_api(api_definition):
     """
     Analyzes the API definition for potential vulnerabilities.
     Returns a Pandas DataFrame containing the analysis results.
@@ -67,11 +81,7 @@ def analyze_api(api_definition, auth_header=None, rate_limit_threshold=100):
 
     results = []
 
-    # auth_header and rate_limit_threshold arrive from the CLI but a
-    # static definition cannot prove either one: nothing is sent to a
-    # live API, and a threshold only means something against observed
-    # traffic. They stay in the signature so callers do not break, and
-    # the checks below report only what the document itself shows.
+    # The checks below report only what the document itself shows.
     # The two endpoint passes are kept separate on purpose: the report
     # reads grouped by check, not interleaved endpoint by endpoint.
     if 'components' not in api_definition or 'securitySchemes' not in api_definition['components']:
@@ -122,14 +132,15 @@ def main():
         if args.verbose:
             logging.getLogger().setLevel(logging.DEBUG)  # Set root logger to DEBUG
 
-        logging.debug(f"Command-line arguments: {args}")
+        # Log a copy with the supplied header value masked out; the
+        # real namespace still carries it for the fetch below.
+        safe_args = vars(args).copy()
+        if safe_args.get('auth_header'):
+            safe_args['auth_header'] = '***'
+        logging.debug(f"Command-line arguments: {argparse.Namespace(**safe_args)}")
 
-        # Input validation (example)
-        if args.rate_limit_threshold < 0:
-            raise ValueError("Rate limit threshold must be a non-negative integer.")
-
-        api_definition = load_api_definition(args.api_definition)
-        analysis_results = analyze_api(api_definition, args.auth_header, args.rate_limit_threshold)
+        api_definition = load_api_definition(args.api_definition, args.auth_header)
+        analysis_results = analyze_api(api_definition)
 
         if analysis_results.empty:
             print("No potential vulnerabilities found.")
