@@ -30,6 +30,12 @@ def build_auth_headers(auth_header):
     """
     if not auth_header:
         return None
+    # The split point decides which shape the user meant. A value like
+    # "Bearer abc:def" contains a colon too, but its left side contains
+    # a space, so the name test below rejects it and it falls through to
+    # the Authorization shape. A bare token with a colon and no spaces
+    # would be misread as a header name; I have not seen a real token
+    # shaped like that, and the help text shows the two forms I support.
     name, sep, value = auth_header.partition(':')
     if sep and name.strip() and ' ' not in name.strip() and value.strip():
         return {name.strip(): value.strip()}
@@ -92,9 +98,18 @@ def analyze_api(api_definition):
     # Check for rate limiting (very basic example - can be improved)
     # This is a simplified check based on description keywords.  Checking this properly would require dynamic testing.
     paths = api_definition.get('paths', {})
+    # Both endpoint passes assume every value under a path is an
+    # operation dict. A path level parameters list, which the format
+    # allows, has no .get and stops the run in main's catch all. I note
+    # it here as a known input shape this does not survive.
     for path, path_item in paths.items():
         for method, operation in path_item.items():
             description = operation.get('description', '').lower()
+            # The description text is the whole evidence here. An
+            # endpoint limited by a gateway, an extension field, or a
+            # response header says nothing in its description and gets
+            # flagged. That is why the finding says potential and asks
+            # for further investigation instead of claiming a gap.
             if "rate limit" not in description and "rate-limit" not in description:
                 # Potentially missing rate limiting
                 results.append({
@@ -106,6 +121,11 @@ def analyze_api(api_definition):
 
 
     # Check for authorization headers (very basic example - can be improved)
+    # This pass never looks at a top level security block. An API that
+    # sets security once at the root and inherits it per endpoint gets
+    # flagged on every endpoint anyway. I leave that false positive
+    # visible in the wording, missing authentication, rather than
+    # silently treating root level as proof each endpoint is covered.
     for path, path_item in paths.items():
         for method, operation in path_item.items():
             security = operation.get('security', [])
