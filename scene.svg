@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="Signal tower gallery over the harbor, the hoist worked at harbor pace">
+  <!-- Back band: harbor and sky. Water brightens slowly toward full morning and holds. Hulls rise and fall by a fraction. -->
+  <rect x="0" y="0" width="1200" height="200" fill="#f6efda"/>
+  <rect x="0" y="150" width="1200" height="130" fill="#4a739c">
+    <animate attributeName="fill" values="#4a739c;#6f97bd;#6f97bd" dur="36s" repeatCount="indefinite"/>
+  </rect>
+  <g fill="#6e543a">
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="9s" repeatCount="indefinite"/>
+      <polygon points="180,232 236,232 224,242 192,242"/><rect x="204" y="204" width="3" height="28" fill="#5a4a32"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0" dur="11s" begin="2s" repeatCount="indefinite"/>
+      <polygon points="880,226 940,226 928,236 892,236"/><rect x="906" y="198" width="3" height="28" fill="#5a4a32"/>
+    </g>
+  </g>
+  <!-- Middle band: the hoist itself. The ball rises, holds at full height, descends partway and holds. Flags carry all the flutter. -->
+  <rect x="0" y="26" width="1200" height="12" fill="#604a30"/>
+  <line x1="600" y1="38" x2="600" y2="70" stroke="#463824" stroke-width="3">
+    <animate attributeName="y2" values="70;150;150;105;105;70" keyTimes="0;0.25;0.5;0.7;0.9;1" dur="36s" repeatCount="indefinite"/>
+  </line>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 80;0 80;0 35;0 35;0 0" keyTimes="0;0.25;0.5;0.7;0.9;1" dur="36s" repeatCount="indefinite"/>
+    <ellipse cx="600" cy="66" rx="11" ry="13" fill="none" stroke="#34322f" stroke-width="4"/>
+    <circle cx="600" cy="118" r="42" fill="#2e527f" stroke="#182c48" stroke-width="3"/>
+    <rect x="558" y="109" width="84" height="18" fill="#b2482e"/>
+    <path d="M578 80 Q600 118 578 156" fill="none" stroke="#c1a16c" stroke-width="4"/>
+    <path d="M622 80 Q600 118 622 156" fill="none" stroke="#c1a16c" stroke-width="4"/>
+  </g>
+  <line x1="760" y1="14" x2="760" y2="180" stroke="#463824" stroke-width="3"/>
+  <g>
+    <animateTransform attributeName="transform" type="rotate" values="0 760 40;4 760 40;0 760 40;-3 760 40;0 760 40" dur="5s" repeatCount="indefinite"/>
+    <polygon points="760,44 812,54 760,66" fill="#f6efda" stroke="#96825a"/>
+    <polygon points="760,92 812,102 760,114" fill="#b2482e"/>
+    <polygon points="760,140 812,150 760,162" fill="#f6efda" stroke="#96825a"/>
+  </g>
+  <!-- Front band: gallery rail and lantern. Lantern stays unlit, flames once at the very end as light fades. Coil of rope does not move. -->
+  <rect x="0" y="262" width="1200" height="10" fill="#b2482e"/>
+  <g stroke="#6e543a" stroke-width="6"><line x1="30" y1="272" x2="30" y2="318"/><line x1="110" y1="272" x2="110" y2="318"/><line x1="1090" y1="272" x2="1090" y2="318"/><line x1="1170" y1="272" x2="1170" y2="318"/></g>
+  <rect x="0" y="312" width="1200" height="48" fill="#96764e"/>
+  <g fill="none" stroke="#c1a16c" stroke-width="6"><ellipse cx="220" cy="338" rx="44" ry="11"/><ellipse cx="220" cy="338" rx="28" ry="7"/><ellipse cx="220" cy="338" rx="13" ry="3.5"/></g>
+  <g>
+    <rect x="980" y="196" width="34" height="48" fill="none" stroke="#34322f" stroke-width="4"/>
+    <rect x="986" y="204" width="22" height="32" fill="#46484c"/>
+    <ellipse cx="997" cy="222" rx="6" ry="10" fill="#e8a83c" opacity="0">
+      <animate attributeName="opacity" values="0;0;0;1;0" keyTimes="0;0.86;0.92;0.97;1" dur="36s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+</svg>
