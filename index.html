@@ -3,98 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>analyze-api-analyzer: The Harbor Master's Signal Tower</title>
-<meta name="description" content="analyze-api-analyzer examines API endpoints for missing authentication and rate limiting issues, from Swagger or OpenAPI definitions or live endpoints.">
+<title>analyze-api-analyzer: The Patch Panel</title>
+<meta name="description" content="Examines API endpoints, from Swagger and OpenAPI definitions or live endpoints, for missing authentication and rate limiting issues.">
 <style>
-@font-face{font-family:'Asul';src:url('fonts/Asul.ttf') format('truetype');}
-@font-face{font-family:'Barlow';src:url('fonts/Barlow.ttf') format('truetype');}
-:root{--harbor:#274770;--cream:#f6efda;--rust:#b2482e;--rope:#c1a16c;--ink:#26303a}
-*{box-sizing:border-box}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;line-height:1.65;border-left:5px solid var(--harbor);background-image:linear-gradient(var(--rope),var(--rope));background-size:3px 100%;background-position:34px 0;background-repeat:no-repeat}
-h1,h2,h3{font-family:'Asul',serif;color:var(--harbor)}
-.hero{min-height:100vh;padding:1.4rem 6vw 2.4rem 4.5rem;max-width:1180px;margin:0 auto}
-.hero img.banner{width:100%;height:auto;display:block}
-.hero img.intro{width:100%;height:auto;display:block;margin-top:1rem}
-.logo{width:150px;height:auto}
-nav{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0}
-.ballbtn{display:inline-flex;align-items:center;justify-content:center;width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#3d6491,var(--harbor) 62%);color:var(--cream);font-family:'Asul',serif;font-size:.82rem;text-align:center;text-decoration:none;padding:.8rem;position:relative;box-shadow:inset 0 -20px 0 -6px var(--rust),inset 0 20px 0 -14px var(--rope);transition:transform .18s}
-.ballbtn:hover{transform:translateY(-7px)}
-.ballbtn:active{transform:translateY(0);filter:brightness(.86)}
-.ballbtn:focus-visible{outline:4px solid var(--rust);outline-offset:4px}
-main{padding:0 6vw 3rem 4.5rem;max-width:1180px;margin:0 auto}
-.board{background:var(--harbor);color:var(--cream);padding:1.3rem 1.6rem;margin:1.6rem 0;position:relative;border:3px solid var(--rope);outline:2px solid var(--rope);outline-offset:5px}
-.board h2{color:var(--cream)}
-.board .stud{position:absolute;width:11px;height:11px;border-radius:50%;background:var(--rust)}
-.board .hook{position:absolute;top:8px;right:16px;font-family:'Asul',serif;color:var(--rope)}
-.board code,.board pre{color:#fff}
-pre{background:rgba(255,255,255,.12);padding:1rem;overflow-x:auto}
-a{color:var(--harbor)}
-a::before{content:'';display:inline-block;width:20px;height:11px;margin-right:.45rem;border-radius:6px;background:linear-gradient(90deg,#e8dcbc,#d9c896);border:1.5px solid var(--rope);vertical-align:middle;transition:transform .15s}
-a:hover::before{transform:rotate(-7deg) scaleX(1.18)}
-.ballbtn::before{content:none}
-.board a{color:#f0d9a8}
-.rope{height:10px;border-top:5px solid var(--rope);margin:2.2rem 0;position:relative}
-.rope::after{content:'';position:absolute;left:50%;top:-11px;width:22px;height:22px;border:5px solid #a8874f;border-radius:50%;background:var(--cream)}
-.rope.minor{width:38%;margin:1.6rem auto}
-.rope.minor::after{content:none}
-table{border-collapse:collapse;width:100%}
-td,th{border-bottom:1px solid var(--rope);padding:.45rem .6rem;text-align:left;vertical-align:top}
-.notice{background:var(--cream);color:var(--ink);border:3px solid var(--rust);padding:.9rem 1.1rem;margin:1rem 0}
-.notice h3{color:var(--rust);margin-top:0}
-footer{padding:1rem 6vw 2.6rem 4.5rem;max-width:1180px;margin:0 auto}
+@font-face{font-family:'Handjet';src:url('fonts/Handjet-400.woff2') format('woff2');font-weight:400}
+@font-face{font-family:'Handjet';src:url('fonts/Handjet-600.woff2') format('woff2');font-weight:600}
+@font-face{font-family:'Handjet';src:url('fonts/Handjet-700.woff2') format('woff2');font-weight:700}
+@font-face{font-family:'Noto Sans Display';src:url('fonts/NotoSansDisplay-400.woff2') format('woff2');font-weight:400}
+@font-face{font-family:'Noto Sans Display';src:url('fonts/NotoSansDisplay-500.woff2') format('woff2');font-weight:500}
+@font-face{font-family:'Noto Sans Display';src:url('fonts/NotoSansDisplay-600.woff2') format('woff2');font-weight:600}
+@font-face{font-family:'Noto Sans Display';src:url('fonts/NotoSansDisplay-700.woff2') format('woff2');font-weight:700}
+:root{--ground:#e8e6e0;--ink:#232527;--paper:#f7f5ef;--line:#d5d1c6;--frame:#efe9dc;--accent:#d42a1e;--accentdk:#a31f14;--accentlt:#ffb3a8;--herotitle:#fbf9f2;--herotext:#e9e6dc;--cardtitle:#17181a;--stripbg:#17181a;--striptext:#f2efe6;--footink:#7c7666;--headfont:'Handjet';--bodyfont:'Noto Sans Display'}
+*{box-sizing:border-box} body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--bodyfont),sans-serif;line-height:1.65}
+h1,h2{font-family:var(--headfont),sans-serif}
+.hero{background:linear-gradient(170deg,#4a4f52 0%,#2c2f31 55%,#17181a 100%);padding:2.2rem 6vw 1.8rem;border-bottom:8px solid var(--accent)}
+.hero .inner{max-width:1020px;margin:0 auto}
+.hero img.wide{width:100%;height:auto;display:block;border:5px solid var(--frame);border-radius:4px;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+.hero .row{display:flex;gap:1.1rem;align-items:flex-start;margin-top:1.2rem}
+.hero .row img{width:92px;height:92px;object-fit:cover;border-radius:6px;border:3px solid var(--frame);background:var(--frame)}
+.hero h1{margin:.1rem 0 .3rem;font-size:2.4rem;color:var(--herotitle)}
+.hero p{max-width:44rem;color:var(--herotext)}
+.hero a{color:var(--accentlt)}
+main{padding:0 6vw 3rem;max-width:1020px;margin:0 auto}
+.card{background:var(--paper);border:1px solid var(--line);border-top:8px solid #6d7276;padding:1.2rem 1.5rem;margin:1.6rem 0;box-shadow:0 2px 8px rgba(30,30,30,.14)}
+.card.accent{border-top-color:var(--accent)}
+.card h2{margin:.1rem 0 .5rem;font-size:1.6rem;color:var(--cardtitle)}
+.card p{margin:.4rem 0}
+.strip{background:var(--stripbg);color:var(--striptext);padding:1rem 1.2rem;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:.92rem;border-radius:4px;border-left:6px solid var(--accent)}
+.btn{display:inline-block;background:var(--accent);color:#fff;font-family:var(--bodyfont),sans-serif;font-weight:700;text-decoration:none;padding:.55rem 1.1rem;border-radius:3px;margin:.3rem .4rem .3rem 0}
+.btn:hover{background:var(--frame);color:var(--accentdk)}.btn:active{transform:translateY(2px)}
+.btn:focus-visible{outline:2px dashed var(--accent);outline-offset:3px}
+a{color:var(--accentdk);font-weight:700}
+table{border-collapse:collapse}td{padding:.2rem .9rem .2rem 0;vertical-align:top}
+td:first-child{font-weight:700;color:var(--cardtitle);white-space:nowrap}
+ul{margin:.4rem 0;padding-left:1.2rem}li{margin:.25rem 0}
+.small{font-size:.92rem}
+footer{padding:0 6vw 2.5rem;max-width:1020px;margin:0 auto;color:var(--footink)}
 </style>
 </head>
 <body>
 <header class="hero">
-<img class="logo" src="assets/logo.png" alt="Hoisted signal ball in harbor blue with a rust red equator band">
-<h1>analyze-api-analyzer</h1>
-<p>The harbor master's signal tower: a checker that looks carefully, then says in shapes everyone can see what it found.</p>
-<nav aria-label="Galleries">
-<a class="ballbtn" href="#charge">Hoist the Check</a>
-<a class="ballbtn" href="#rigging">Rigging the Hoist</a>
-<a class="ballbtn" href="#board">The Parameter Board</a>
-<a class="ballbtn" href="#book">The Harbor Book</a>
-</nav>
-<img class="intro" src="assets/intro-banner.png" alt="Signal tower gallery at dawn, a harbor blue signal ball hanging over the port, no writing anywhere">
-<img class="banner" src="assets/banner.png" alt="Signal tower above the harbor with analyze-api-analyzer painted on the gallery board">
+<div class="inner">
+<img class="wide" src="assets/intro-banner.png" alt="A red test lead close up plugged into a patch panel row, held by a gloved hand at the frame edge, cream cable loops swaying in soft focus behind it and tiny port numbers printed under the sockets">
+<div class="row"><img src="assets/logo.png" alt="analyze-api-analyzer logo: a steel patch panel straight on in a black rack, its top row of sockets empty and its lower row filled with cream cables looped below, one red test lead looped between two sockets at the centre"><div><h1>analyze-api-analyzer</h1><p>Examines API endpoints, from Swagger and OpenAPI definitions or live endpoints, for common vulnerabilities like missing authentication or rate limiting issues.</p><p><a class="btn" href="https://github.com/ShadowGuard-AI/analyze-api-analyzer">Open the repo</a> <a class="btn" href="#usage">Usage</a></p></div></div>
+</div>
 </header>
 <main>
-<div class="rope"></div>
-<section class="board" id="charge"><span class="stud" style="top:8px;left:8px"></span><span class="stud" style="bottom:8px;right:8px"></span><span class="hook">&#8630; ball hoisted</span>
-<h2>Top Gallery: The Charge of the Tower</h2>
-<p>analyze-api-analyzer examines API endpoints for common vulnerabilities, naming the two the README names: missing authentication and rate limiting issues.</p>
-<p>It looks where the README says it looks: endpoints taken from Swagger or OpenAPI definitions, or live endpoints.</p>
-<p>Working note: it uses <code>requests</code> and <code>json</code> for API interaction and definition parsing, and it is focused on data analysis and reporting.</p>
-</section>
-<div class="rope minor"></div>
-<section class="board" id="rigging"><span class="stud" style="top:8px;left:8px"></span><span class="hook">&#8630; pending</span>
-<h2>Second Gallery: Rigging the Hoist</h2>
-<p>Installation is the single clone line the README gives, printed exactly as recorded:</p>
-<pre>git clone https://github.com/ShadowStrikeHQ/analyze-api-analyzer</pre>
-<p><a href="#board">Show the Harbor Signals</a> and check the parameter board before the first hoist.</p>
-</section>
-<div class="rope"></div>
-<section class="board" id="board"><span class="stud" style="top:8px;left:8px"></span><span class="hook">&#8630; ball hoisted</span>
-<h2>Third Gallery: Flying the Check</h2>
-<pre>./analyze-api-analyzer [params]</pre>
-<h3 style="color:var(--cream)">The Parameter Board</h3>
-<table>
-<tr><th>Parameter</th><th>Recorded duty</th></tr>
-<tr><td><code>-h</code></td><td>Shows the help message and exits</td></tr>
-<tr><td><code>--auth_header</code></td><td>Header for the Fetch: the header to send when fetching a definition from a URL, given either as a full "Name: Value" header or as an Authorization value such as "Bearer &lt;token&gt;"</td></tr>
-<tr><td><code>--output</code></td><td>No description provided</td></tr>
-<tr><td><code>--verbose</code></td><td>No description provided</td></tr>
-</table>
-<div class="notice"><h3>Nothing Hoisted Here</h3><p>The README lists <code>--output</code> and <code>--verbose</code> with no description provided. This page will not invent duties for flags its source leaves unexplained.</p></div>
-</section>
-<div class="rope minor"></div>
-<section class="board" id="book"><span class="stud" style="top:8px;left:8px"></span><span class="hook">&#8630; pending</span>
-<h2>Last Gallery: The Harbor Book</h2>
-<p>License, set plainly as the README records it:</p>
-<p>Copyright (c) ShadowStrikeHQ</p>
-<p>No extra promises about reports, formats, or findings are made here, since the source promises none.</p>
-</section>
+<section class="card accent"><h2>What it checks</h2><ul>
+<li>Missing authentication on endpoints</li>
+<li>Rate limiting issues</li>
+</ul><p>It works from a Swagger or OpenAPI definition, or against live endpoints, and uses <code>requests</code> and <code>json</code> for API interaction and definition parsing. It can fetch a definition from a URL, sending an optional authentication header with the fetch.</p></section>
+<section class="card" id="usage"><h2>Install and usage</h2><div class="strip">cd analyze-api-analyzer<br>pip install -r requirements.txt<br><br>./analyze-api-analyzer [params]</div><p class="small">Dependencies are in <code>requirements.txt</code>: pandas and requests.</p></section>
+<section class="card"><h2>Parameters</h2><table>
+<tr><td><code>-h</code></td><td>show help message and exit</td></tr>
+<tr><td><code>--output</code></td><td>no description provided in the source; the blank is left showing rather than filled with an invented duty</td></tr>
+<tr><td><code>--auth_header</code></td><td>header to send when fetching a definition from a URL: a full "Name: Value" header, or an Authorization value such as "Bearer &lt;token&gt;". A credential travels with this fetch, so the header is named in full rather than shortened.</td></tr>
+<tr><td><code>--verbose</code></td><td>no description provided in the source; the blank is left showing rather than filled with an invented duty</td></tr>
+</table></section>
+<section class="card accent"><h2>The files</h2><p class="small"><code>main.py</code>, the analyzer itself. <code>requirements.txt</code>, its dependencies. <code>LICENSE</code>, the MIT License. Full notes are in the <a href="https://github.com/ShadowGuard-AI/analyze-api-analyzer">repo README</a>.</p></section>
 </main>
-<footer><p>analyze-api-analyzer, read at a distance and reported plainly, the way a tower publishes what it has inspected.</p></footer>
+<footer><p>One socket at a time, asked whether it answers safely.</p></footer>
 </body>
 </html>
