@@ -1,11 +1,11 @@
-![Signal tower gallery at dawn, a harbor blue signal ball hanging over the quiet port, scenery only](intro-banner.png)
+![Intro scenery: a red test lead close up plugged into a patch panel row, held by a gloved hand at the frame edge, cream cable loops swaying in soft focus behind it and tiny port numbers printed under the sockets](intro-banner.png)
 
 
 # analyze-api-analyzer
 
-![analyze-api-analyzer painted in Asul on the harbor blue gallery board of the signal tower](banner.png)
+![Wordmark banner: a tall black rack of steel patch panels in a server room, cream cables looped in even arcs across every row and one red test lead running straight across the front of the rack, with two more red tipped leads among the cream loops below](banner.png)
 
-![The hoisted signal ball, ring and halyard, drawn once as the header plate](logo.png)
+![analyze-api-analyzer logo: a steel patch panel straight on in a black rack, its top row of sockets empty and its lower row filled with cream cables looped below, one red test lead looped between two sockets at the centre](logo.png)
 
 ![Animated signal tower gallery: the ball rises, holds, and descends partway while the flags stir](scene.svg)
 Examines API endpoints (e.g., Swagger/OpenAPI definitions or live endpoints) for common vulnerabilities like missing authentication or rate limiting issues. Uses `requests` and `json` for API interaction and definition parsing. - Focused on Data analysis and reporting
